@@ -1,35 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #74ebd5, #acb6e5);
+            color: white;
+            min-height: 100vh;
+            transition: background 0.5s;
+        }
+        .dark-mode {
+            background: #1e1e1e;
+            color: #f5f5f5;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            backdrop-filter: blur(10px);
+            color: white;
+            transition: transform 0.3s ease-in-out;
+        }
+        .dark-mode .card {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Search Results</h1>
+    <button class="toggle-btn" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
+    <div class="container py-4">
+        <h1 class="text-center mb-4">🔍 Search Results</h1>
 
         {% if error %}
-        <p class="text-danger">{{ error }}</p>
+        <div class="alert alert-danger text-center">{{ error }}</div>
         {% elif weather_data %}
-        <h2>Weather in {{ city.name }}</h2>
-        <p>Temperature: {{ weather_data.main.temp }}°C</p>
-        <p>Humidity: {{ weather_data.main.humidity }}%</p>
-        <p>Description: {{ weather_data.weather.0.description }}</p>
-        <a href="{% url 'detail' city_id=city.id %}" class="btn btn-sm btn-info">Detailed View</a>
+        <div class="card p-4 mb-4">
+            <h2 class="mb-3">{{ city.name }}</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <p><i class="fas fa-thermometer-half"></i> {{ weather_data.main.temp }}°C</p>
+                </div>
+                <div class="col-md-4">
+                    <p><i class="fas fa-tint"></i> {{ weather_data.main.humidity }}%</p>
+                </div>
+                <div class="col-md-4">
+                    <p><i class="fas fa-cloud"></i> {{ weather_data.weather.0.description }}</p>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <a href="{% url 'detail' city_id=city.id %}" class="btn btn-info">
+                    <i class="fas fa-info-circle"></i> Detailed View
+                </a>
+            </div>
+        </div>
         {% else %}
-        <p>No results found.</p>
+        <div class="alert alert-warning text-center">No results found.</div>
         {% endif %}
 
-        <form method="GET" action="{% url 'search_city' %}">
-            <div class="form-group">
-                <input type="text" name="city" class="form-control" placeholder="Search City">
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
+        <div class="search-bar bg-blur p-4 rounded">
+            <form method="GET" action="{% url 'search_city' %}">
+                <div class="input-group">
+                    <input type="text" name="city" class="form-control" placeholder="Search Another City">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            let icon = document.querySelector(".toggle-btn i");
+            if (document.body.classList.contains("dark-mode")) {
+                icon.classList.replace("fa-moon", "fa-sun");
+            } else {
+                icon.classList.replace("fa-sun", "fa-moon");
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
