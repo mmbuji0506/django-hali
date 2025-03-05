@@ -25,14 +25,14 @@ def search_city(request):
             offset_seconds = timedelta(seconds=timezone_offset)
             offset_hours = offset_seconds.total_seconds() / 3600
             if offset_hours == 0:
-                timezone_str = 'UTC'
+                timezone_str = 'Africa/Dar_es_Salaam'
             else:
                 sign = '+' if offset_hours > 0 else '-'
                 timezone_str = f'Etc/GMT{sign}{int(abs(offset_hours))}' # creates string in the format pytz understands
         elif isinstance(timezone_offset, str):
             timezone_str = timezone_offset # if it's already a string, keep it
         else:
-            timezone_str = 'UTC' # default to UTC if no time zone info.
+            timezone_str = 'Africa/Dar_es_Salaam' # default to Africa/Dar_es_Salaam if no time zone info.
 
         city, created = City.objects.get_or_create(name=city_name, defaults={'timezone': pytz.timezone(timezone_str), 'latitude': data['coord']['lat'] if 'coord' in data else 0, 'longitude': data['coord']['lon'] if 'coord' in data else 0})
     WeatherData.objects.create(city=city, temperature=data['main']['temp'], humidity=data['main']['humidity'], description=data['weather'][0]['description'])
