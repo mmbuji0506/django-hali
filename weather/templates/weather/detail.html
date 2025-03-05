@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Details for {{ city.name }}</h1>
+
+        <div id="clock"></div>
+
+        {% if error %}
+        <p class="text-danger">{{ error }}</p>
+        {% elif weather_data %}
+        <p>Temperature: {{ weather_data.main.temp }}°C</p>
+        <p>Humidity: {{ weather_data.main.humidity }}%</p>
+        <p>Description: {{ weather_data.weather.0.description }}</p>
+        {% else %}
+        <p>Search for a city to see weather details.</p>
+        {% endif %}
+
+        <form method="GET" action="{% url 'search_city' %}">
+            <div class="form-group">
+                <input type="text" name="city" class="form-control" placeholder="Search City">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    <script>
+        function updateClock(timezone) {
+            let now = new Date();
+            let options = { timeZone: timezone, hour12: true, hour: 'numeric', minute: 'numeric', second: 'numeric' };
+            let timeString = now.toLocaleTimeString('en-US', options);
+            document.getElementById('clock').textContent = timeString;
+        }
+
+        function startClock(timezone) {
+            updateClock(timezone);
+            setInterval(() => updateClock(timezone), 1000);
+        }
+        {% if weather_data %}
+            startClock('{{ city.timezone }}');
+        {% else %}
+            startClock('UTC');
+        {% endif %}
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
