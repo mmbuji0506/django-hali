@@ -48,7 +48,9 @@ Ensure you have the following installed on your system:
    - Create a `.env` file in the project root.
    - Add your OpenWeatherMap API key:
      ```
-     OPENWEATHERMAP_API_KEY="bd5e378503939ddaee76f12ad7a97608"
+     OPENWEATHER_API_KEY="your_api_key_here"
+     SECRET_KEY='your_secret_key_here'
+     DEBUG=True
      ```
 
 5. **Apply database migrations:**
