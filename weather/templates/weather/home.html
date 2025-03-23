@@ -298,6 +298,7 @@
     <div class="container py-5">
         <div class="search-bar mb-4">
             <h1><i class="fas fa-globe-americas"></i> Hali Weather Dashboard</h1>
+            <div id="clock" class="mb-4"></div>
             <form method="GET" action="{% url 'search_city' %}" onsubmit="showLoading()">
                 <div class="input-group">
                     <input type="text" name="city" class="form-control form-control-lg" 
@@ -403,6 +404,22 @@
         window.addEventListener('load', () => {
             document.querySelector('.loading-overlay').style.display = 'none';
         });
+
+        function updateClock() {
+            const options = {
+                timeZone: 'Africa/Dar_es_Salaam',
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', options);
+            document.getElementById('clock').textContent = timeString;
+        }
+    
+        updateClock();
+        setInterval(updateClock, 1000);
 
         // Narrator functionality
         document.addEventListener("DOMContentLoaded", function() {

@@ -282,7 +282,7 @@
                     <i class="fas fa-expand"></i>
                 </a>
             </div>
-            
+            <div id="clock" class="mb-4"></div>
             <div class="weather-icon">
                 {% if weather_data.weather.0.main == "Clear" %}
                     <i class="fas fa-sun"></i>
@@ -378,6 +378,22 @@
                 document.getElementById('theme-text').textContent = 'Light Mode';
             }
         });
+
+        function updateClock() {
+            const options = {
+                timeZone: 'Africa/Dar_es_Salaam',
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', options);
+            document.getElementById('clock').textContent = timeString;
+        }
+    
+        updateClock();
+        setInterval(updateClock, 1000);
 
         // Narrator functionality
         document.addEventListener("DOMContentLoaded", function() {

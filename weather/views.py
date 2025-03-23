@@ -4,6 +4,7 @@ from .utils import get_weather_data
 from django.conf import settings
 import logging, pytz
 from datetime import datetime
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -43,15 +44,10 @@ def search_city(request):
             return render(request, 'weather/search.html', context)
         if data:
             try:
-                timezone_offset = data.get('timezone', 0)
-                timezone_str = 'UTC'
-
-                if isinstance(timezone_offset, int):
-                    offset_hours = timezone_offset // 3600
-                    timezone_str = f'Etc/GMT{offset_hours:+d}'
-                elif isinstance(timezone_offset, str):
-                    timezone_str = timezone_offset
-
+                timezone_str = 'Africa/Dar_es_Salaam'
+                timezone.activate(pytz.timezone(timezone_str))
+                current_time = timezone.now()
+                time_24hr = current_time.strftime('%H:%M:%S')
                 city, created = City.objects.get_or_create(
                     name=city_name.title(),
                     defaults={
@@ -64,17 +60,19 @@ def search_city(request):
                 pressure = validate_pressure(data['main'].get('pressure'), city_name)
                 print(f"Pressure (views.py, validated): {pressure}, Type: {type(pressure)}")
 
-                WeatherData.objects.create(
+                weather_instance = WeatherData.objects.create(
                     city=city,
                     temperature=data['main']['temp'],
                     humidity=data['main']['humidity'],
                     pressure=pressure,
                     wind_speed=data['wind']['speed'],
-                    description=data['weather'][0]['description']
+                    description=data['weather'][0]['description'],
+                    timestamp=current_time
                 )
 
                 context['weather_data'] = data
                 context['city'] = city
+                context['current_time'] = time_24hr
 
             except pytz.UnknownTimeZoneError:
                 context['error'] = f"Invalid timezone for {city_name}"

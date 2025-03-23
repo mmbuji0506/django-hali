@@ -337,29 +337,21 @@
             }
         });
 
-        function updateClock(timezone) {
+        function updateClock() {
             const options = {
-                timeZone: timezone,
-                hour12: true,
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric',
-                timeZoneName: 'short'
+                timeZone: 'Africa/Dar_es_Salaam',
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
             };
-            const now = new Date().toLocaleTimeString('en-US', options);
-            document.getElementById('clock').textContent = now;
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', options);
+            document.getElementById('clock').textContent = timeString;
         }
-
-        function startClock(timezone) {
-            updateClock(timezone);
-            setInterval(() => updateClock(timezone), 1000);
-        }
-
-        {% if weather_data %}
-            startClock('{{ city.timezone }}');
-        {% else %}
-            startClock('UTC');
-        {% endif %}
+    
+        updateClock();
+        setInterval(updateClock, 1000);
 
         // Narrator functionality
         document.addEventListener("DOMContentLoaded", function() {
