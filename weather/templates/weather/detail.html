@@ -3,88 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Details</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>Hali - Weather Details for {{ city.name }}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Fonts (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
     <style>
-        body {
-            background: linear-gradient(to right, #74ebd5, #acb6e5);
-            color: white;
-            min-height: 100vh;
-            transition: background 0.5s, color 0.5s;
-            font-family: 'Arial', sans-serif;
+        :root {
+            --bg-color: linear-gradient(135deg, #00c4cc, #7a00cc); /* Hali-specific gradient */
+            --text-color: #fff;
+            --navbar-bg: rgba(255, 255, 255, 0.9);
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-text: #fff;
+            --footer-bg: rgba(0, 0, 0, 0.2);
+            --accent-color: #00c4cc;
+            --btn-gradient: linear-gradient(135deg, #00c4cc, #7a00cc);
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
+
         .dark-mode {
-            background: #1a1a1a;
-            color: #f5f5f5;
+            --bg-color: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            --text-color: #e0e0e0;
+            --navbar-bg: rgba(0, 0, 0, 0.9);
+            --card-bg: rgba(0, 0, 0, 0.8);
+            --card-text: #fff;
+            --footer-bg: rgba(255, 255, 255, 0.1);
+            --accent-color: #ff6f61;
+            --btn-gradient: linear-gradient(135deg, #ff6f61, #4a00e0);
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .navbar {
+            background: var(--navbar-bg);
+            box-shadow: var(--shadow);
+            padding: 1rem 2rem;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #333 !important;
+        }
+
+        .dark-mode .navbar-brand {
+            color: #fff !important;
+        }
+
+        .nav-link {
+            color: #333 !important;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .dark-mode .nav-link {
+            color: #fff !important;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color) !important;
+        }
+
+        .btn-link.nav-link {
+            color: #333 !important;
+        }
+
+        .dark-mode .btn-link.nav-link {
+            color: #fff !important;
+        }
+
+        #speak-weather {
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: var(--transition);
+        }
+
+        #speak-weather:hover {
+            background: rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+        }
+
         .card {
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--card-bg);
             border: none;
             backdrop-filter: blur(12px);
             border-radius: 15px;
+            transition: var(--transition);
+            animation: fadeInUp 0.7s ease-in-out;
         }
-        .toggle-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            padding: 12px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1001;
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
         }
+
         #clock {
             font-size: 2.5rem;
             font-weight: bold;
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             margin-bottom: 2rem;
         }
+
+        .weather-icon {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .weather-icon i {
+            font-size: 5rem;
+        }
+
         .detail-metrics {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
             margin: 2rem 0;
         }
+
         .metric-card {
             padding: 2rem;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             text-align: center;
+            transition: var(--transition);
         }
+
+        .metric-card:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         .metric-value {
             font-size: 2rem;
             font-weight: bold;
             margin: 1rem 0;
         }
-        .weather-icon {
-            text-align: center;
-            margin: 2rem 0;
+
+        .btn-primary {
+            background: var(--btn-gradient);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: var(--transition);
         }
-        .weather-icon i {
-            font-size: 5rem;
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
         }
-        .footer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.2);
-            color: white;
+
+        .alert-info {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            border: none;
+            border-radius: 10px;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 1.5rem;
             text-align: center;
-            padding: 10px 0;
-            z-index: 1000;
+            background: var(--footer-bg);
+            color: var(--text-color);
+            border-radius: 15px 15px 0 0;
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            color: #ffdd57;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            .nav-link {
+                font-size: 0.9rem;
+            }
+            #clock {
+                font-size: 1.8rem;
+            }
+            .weather-icon i {
+                font-size: 3rem;
+            }
+            .metric-value {
+                font-size: 1.5rem;
+            }
+            .btn-primary {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <button class="toggle-btn" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
-    <div class="container py-4">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fas fa-cloud-sun"></i> Hali</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="speak-weather"><i class="fas fa-headphones"></i> Hear Weather Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-link nav-link" onclick="toggleDarkMode()" id="theme-toggle">
+                            <i id="theme-icon" class="fas fa-moon"></i>
+                            <span id="theme-text">Dark Mode</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
         <div class="card p-4">
-            <h1 class="text-center mb-4"><i class="fas fa-cloud-sun"></i>Weather Details for {{ city.name }}</h1>
+            <h1 class="text-center mb-4"><i class="fas fa-cloud-sun"></i> Weather Details for <span id="city-name">{{ city.name }}</span></h1>
             
             <div id="clock" class="mb-4"></div>
 
@@ -103,30 +266,30 @@
             <div class="detail-metrics">
                 <div class="metric-card">
                     <i class="fas fa-thermometer-half fa-2x"></i>
-                    <div class="metric-value">{{ weather_data.main.temp }}°C</div>
+                    <div class="metric-value" id="temperature">{{ weather_data.main.temp }}°C</div>
                     <small>Temperature</small>
                 </div>
                 <div class="metric-card">
                     <i class="fas fa-tint fa-2x"></i>
-                    <div class="metric-value">{{ weather_data.main.humidity }}%</div>
+                    <div class="metric-value" id="humidity">{{ weather_data.main.humidity }}%</div>
                     <small>Humidity</small>
                 </div>
                 <div class="metric-card">
                     <i class="fas fa-wind fa-2x"></i>
-                    <div class="metric-value">{{ weather_data.wind.speed }} m/s</div>
+                    <div class="metric-value" id="wind-speed">{{ weather_data.wind.speed }} m/s</div>
                     <small>Wind Speed</small>
                 </div>
                 <div class="metric-card">
                     <i class="fas fa-tachometer-alt fa-2x"></i>
-                    <div class="metric-value">{{ weather_data.main.pressure }} hPa</div>
+                    <div class="metric-value" id="pressure">{{ weather_data.main.pressure }} hPa</div>
                     <small>Pressure</small>
                 </div>
             </div>
 
             {% if weather_data.rain %}
-            <div class="alert alert-info mt-4 text-center">
+            <div class="alert alert-info mt-4 text-center" id="precipitation">
                 <i class="fas fa-umbrella me-2"></i>
-                Precipitation: {{ weather_data.rain.1h|default:"0" }}mm last hour
+                Precipitation: <span id="precipitation-value">{{ weather_data.rain.1h|default:"0" }}</span>mm last hour
             </div>
             {% endif %}
 
@@ -138,17 +301,41 @@
         </div>
     </div>
 
-    <div class="footer">
-        Crafted with ❤️ by <a href="https://github.com/" target="_blank" style="color: inherit;">JOSAM ENEZA MMBUJI</a>
-    </div>
+    <!-- Footer -->
+    <footer>
+        <p class="mb-0">Crafted with ❤️ by <a href="https://github.com/" target="_blank">Josam Eneza Mmbuji</a></p>
+    </footer>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Dark Mode, Clock, and Narrator Script -->
     <script>
         function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
-            const icon = document.querySelector(".toggle-btn i");
-            icon.classList.toggle("fa-moon");
-            icon.classList.toggle("fa-sun");
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            const isDarkMode = body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+            if (isDarkMode) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                text.textContent = 'Light Mode';
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                text.textContent = 'Dark Mode';
+            }
         }
+
+        // Initialize theme on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('theme-icon').classList.replace('fa-moon', 'fa-sun');
+                document.getElementById('theme-text').textContent = 'Light Mode';
+            }
+        });
 
         function updateClock(timezone) {
             const options = {
@@ -173,7 +360,52 @@
         {% else %}
             startClock('UTC');
         {% endif %}
+
+        // Narrator functionality
+        document.addEventListener("DOMContentLoaded", function() {
+            const speakWeatherButton = document.getElementById("speak-weather");
+            if (speakWeatherButton) {
+                speakWeatherButton.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    speakWeather();
+                });
+            }
+        });
+
+        function speakWeather() {
+            const city = document.getElementById('city-name')?.innerText;
+            const temperature = document.getElementById('temperature')?.innerText;
+            const humidity = document.getElementById('humidity')?.innerText;
+            const windSpeed = document.getElementById('wind-speed')?.innerText;
+            const pressure = document.getElementById('pressure')?.innerText;
+            const precipitation = document.getElementById('precipitation-value')?.innerText || "0";
+
+            if (!city || !temperature || !humidity || !windSpeed || !pressure) {
+                alert("No weather data available to narrate.");
+                return;
+            }
+
+            const weatherText = `Here is the weather report for ${city} from Hali: The temperature is ${temperature}, humidity is ${humidity}, wind speed is ${windSpeed}, pressure is ${pressure}, and precipitation in the last hour is ${precipitation} millimeters.`;
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+
+                const speech = new SpeechSynthesisUtterance(weatherText);
+                speech.lang = "en-US";
+                speech.rate = 1.0;
+                speech.pitch = 1.0;
+                const voices = window.speechSynthesis.getVoices();
+                speech.voice = voices.find(voice => voice.lang === "en-US") || voices[0];
+
+                window.speechSynthesis.speak(speech);
+            } else {
+                alert("Text-to-Speech is not supported in this browser.");
+            }
+        }
+
+        window.speechSynthesis.onvoiceschanged = function() {
+            const voices = window.speechSynthesis.getVoices();
+        };
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
